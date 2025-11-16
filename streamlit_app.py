@@ -238,7 +238,8 @@ with st.sidebar:
         if student:
             st.success("✅ Öğrenci bulundu!")
             st.write(f"**Ad:** {student['name']}")
-            st.write(f"**Kayıt Tarihi:** {student['registration_date']}")
+            reg_date = student.get('registration_date', 'Bilinmiyor')
+            st.write(f"**Kayıt Tarihi:** {reg_date}")
         else:
             st.error("❌ Öğrenci bulunamadı")
             student = None
@@ -266,7 +267,11 @@ else:
         with col1:
             st.metric("Öğrenci No", student_id)
         with col2:
-            st.metric("Kayıt Tarihi", student['registration_date'][:10])
+            reg_date = student.get('registration_date', 'N/A')
+            if isinstance(reg_date, str) and len(reg_date) >= 10:
+                st.metric("Kayıt Tarihi", reg_date[:10])
+            else:
+                st.metric("Kayıt Tarihi", str(reg_date))
         with col3:
             invoices = get_student_invoices(student_id)
             st.metric("Fatura Sayısı", len(invoices))
