@@ -37,17 +37,23 @@ st.markdown("""
 def get_db_connection():
     """Veritabanı bağlantısı oluştur (cache'lendi)"""
     try:
-        # Lokalde test ederken
+        # Veritabanı path'i
         db_path = "data/database/logistics.db"
+        
+        # Dosya var mı kontrol et
         if not os.path.exists(db_path):
-            # Streamlit Cloud'da
-            db_path = "./data/database/logistics.db"
+            st.error(f"❌ Veritabanı bulunamadı: {db_path}")
+            st.write(f"Çalışma dizini: {os.getcwd()}")
+            st.write(f"Dosyalar: {os.listdir('.')}")
+            return None
         
         conn = sqlite3.connect(db_path)
         conn.row_factory = sqlite3.Row
         return conn
     except Exception as e:
         st.error(f"❌ Veritabanı bağlantı hatası: {e}")
+        import traceback
+        st.error(traceback.format_exc())
         return None
 
 # ═══════════════════════════════════════════════════════════════════════════════
