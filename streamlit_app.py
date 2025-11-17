@@ -70,7 +70,6 @@ def get_student_info(student_id):
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM students WHERE student_id = ?", (student_id,))
         student = cursor.fetchone()
-        conn.close()
         return dict(student) if student else None
     except Exception as e:
         st.error(f"Öğrenci sorgusu hatası: {e}")
@@ -92,7 +91,6 @@ def get_student_invoices(student_id):
             ORDER BY invoice_number
         """, (student_id,))
         invoices = [dict(row) for row in cursor.fetchall()]
-        conn.close()
         return invoices
     except Exception as e:
         st.error(f"Fatura sorgusu hatası: {e}")
@@ -112,7 +110,6 @@ def get_correct_answers(student_id, invoice_number):
             WHERE student_id = ? AND invoice_number = ?
         """, (student_id, invoice_number))
         answers = cursor.fetchone()
-        conn.close()
         return dict(answers) if answers else None
     except Exception as e:
         st.error(f"Doğru cevap sorgusu hatası: {e}")
@@ -200,7 +197,6 @@ def save_submission(student_id, invoice_number, submitted_answers, score):
             datetime.now().isoformat()
         ))
         conn.commit()
-        conn.close()
         return True
     except Exception as e:
         st.error(f"Kayıt hatası: {e}")
